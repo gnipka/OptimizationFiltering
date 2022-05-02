@@ -6,26 +6,21 @@ using System.Threading.Tasks;
 
 namespace OptimizationFiltering.Parametres
 {
-    internal class OutputParameters
+    internal class OutputParametersArray
     {
-        /// <summary>
-        /// Oбъемный расход фильтрата 
-        /// </summary>
-        public double VolumeFlowFiltrResult { get; set; }
-
         /// <summary>
         /// Температура первой перегородки
         /// </summary>
-        public double Temperature1Result { get; set; }
+        public double Temperature1 { get; set; }
 
         /// <summary>
         /// Температура второй перегородки
         /// </summary>
-        public double Temperature2Result { get; set; }
+        public double Temperature2 { get; set; }
 
         /// <summary>
-        /// массив выходных пареметров
+        /// Объемный расход фильтрата
         /// </summary>
-        public OutputParametersArray[]? OutputParametersArray { get; set; }
+        public double VolumeFlowFiltr { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using OptimizationFiltering.Optimization_Methods;
+﻿using OptimizationFiltering.Equations;
+using OptimizationFiltering.Optimization_Methods;
 using OptimizationFiltering.Parametres;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,8 @@ namespace OptimizationFiltering.ViewModels
             }
         }
 
+        
+
         #endregion
 
         private RelayCommand _Calc;
@@ -70,7 +73,12 @@ namespace OptimizationFiltering.ViewModels
             {
                 return _Calc ??= new RelayCommand(x =>
                 {
-                    SteepestDescent.Calc(InputParameter, Limitation, OutputParameter); 
+
+                    OutputParameters parameters = new OutputParameters();
+                    ComplexMethodBox complexMethodBox = new ComplexMethodBox(InputParameter, Limitation, SolutionParameter);
+                    parameters = complexMethodBox.Calc();
+                    parameters.OutputParametersArray = FiltrationEquation.CalcEqvation(InputParameter, Limitation, SolutionParameter);
+                    OutputParameter = parameters;
                 });
             }
         }
