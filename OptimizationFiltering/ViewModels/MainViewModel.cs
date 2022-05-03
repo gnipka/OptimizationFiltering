@@ -1,6 +1,9 @@
 ﻿using OptimizationFiltering.Equations;
 using OptimizationFiltering.Optimization_Methods;
 using OptimizationFiltering.Parametres;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,9 +65,29 @@ namespace OptimizationFiltering.ViewModels
             }
         }
 
-        
+
 
         #endregion
+
+
+        /// <summary>
+        /// Модель для взаимоействия с графиком
+        /// </summary>
+        private PlotModel _MyModel;
+
+        public PlotModel MyModel
+        {
+            get
+            {
+                return _MyModel;
+            }
+            set
+            {
+                _MyModel = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private RelayCommand _Calc;
         public RelayCommand Calc
@@ -78,6 +101,38 @@ namespace OptimizationFiltering.ViewModels
                     ComplexMethodBox complexMethodBox = new ComplexMethodBox(InputParameter, Limitation, SolutionParameter);
                     parameters = complexMethodBox.Calc();
                     parameters.OutputParametersArray = FiltrationEquation.CalcEqvation(InputParameter, Limitation, SolutionParameter);
+                    
+
+                    _MyModel = new PlotModel { Title = "V = F(T1, T2)", TitleFontSize = 16 };
+
+                    Func<double, double, double> peaks = (x, y) => InputParameter.Alpha * InputParameter.FuelLiquid * Math.Pow(x * x + InputParameter.Beta * y - InputParameter.Mu * InputParameter.DifferenceMagnitude1, InputParameter.CountPartitions) + InputParameter.Gamma * Math.Pow(InputParameter.Beta1 * x + y * y - InputParameter.Mu1 * InputParameter.DifferenceMagnitude2, InputParameter.CountPartitions);
+
+                    double x0 = Limitation.LeftT1;
+                    double x1 = Limitation.RightT1;
+                    double y0 = Limitation.LeftT2;
+                    double y1 = Limitation.RightT2;
+
+                    var xx = ArrayBuilder.CreateVector(x0, x1, 100);
+                    var yy = ArrayBuilder.CreateVector(y0, y1, 100);
+                    var peaksData = ArrayBuilder.Evaluate(peaks, xx, yy);
+
+                    var cs = new ContourSeries
+                    {
+                        Color = OxyColors.Black,
+                        LabelBackground = OxyColors.White,
+                        ColumnCoordinates = yy,
+                        RowCoordinates = xx,
+                        Data = peaksData,
+                        TrackerFormatString = "T1 = {2:0.00}, T2 = {4:0.00}" + Environment.NewLine + "V = {6:0.00}"
+                    };
+
+                    _MyModel.Series.Add(cs);
+
+                    _MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Температура на первой перегородке, С" });
+                    _MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Температура на второй перегородке, С" });
+                    
+                    MyModel = _MyModel;
+
                     OutputParameter = parameters;
                 });
             }

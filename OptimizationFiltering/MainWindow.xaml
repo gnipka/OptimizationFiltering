@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OptimizationFiltering" xmlns:viewmodels="clr-namespace:OptimizationFiltering.ViewModels"
+        xmlns:oxy="http://oxyplot.org/wpf"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="Программный комплекс для решения задачи отпимизации" Height="650" Width="1200">
     <Grid>
         <StackPanel>
             <Menu Style="{DynamicResource MaterialDesignMenu}">
@@ -16,7 +17,7 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.7*"/>
+                    <ColumnDefinition Width="0.6*"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
@@ -54,7 +55,7 @@
                             </TextBlock>
                             <TextBox Text="{Binding InputParameter.DifferenceMagnitude2}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="2"/>
                             <TextBlock Grid.Column="2" FontSize="14" Grid.Row="2" Text="КПа" Margin="5 10 0 0"/>
-                            
+
                         </Grid>
                     </GroupBox>
 
@@ -103,7 +104,7 @@
                             </TextBlock>
                             <TextBox Text="{Binding SolutionParameter.CalcError}" FontSize="14" Grid.Column="1" TextAlignment="Center"  />
                         </Grid>
-                    </GroupBox>                    
+                    </GroupBox>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <GroupBox FontSize="14" Grid.Column="1" Header="Выходные параметры" Style="{DynamicResource MaterialDesignCardGroupBox}">
@@ -114,6 +115,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -144,20 +146,48 @@
                             <TextBlock FontSize="14" Grid.Column="2" Grid.Row="2" Margin="5 5 0 0">
                                 <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
                             </TextBlock>
-                            <DataGrid ItemsSource="{Binding OutputParameter.OutputParametersArray}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" Margin="0 0 5 5" MaxHeight="230" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Binding="{Binding Temperature1}" Header="Температура 1"/>
-                                    <DataGridTextColumn Binding="{Binding Temperature2}" Header="Температура 2"/>
-                                    <DataGridTextColumn Binding="{Binding VolumeFlowFiltr}" Header="Объемный расход фильтрата"/>
+                            <Button Command="{Binding Calc}" Margin="0 10 0 10" Content="Расчет" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"/>
 
-                                </DataGrid.Columns>
+                            <TabControl Style="{DynamicResource MaterialDesignNavigatilRailTabControl}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 5 5" MaxHeight="350" >
+                                <TabItem Header="Таблица" Width="93">
+                                    <TabItem.Content>
+                                        <DataGrid ItemsSource="{Binding OutputParameter.OutputParametersArray}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Temperature1}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock>
+                                                            Температура 1, <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
+                                                        </TextBlock>
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Binding="{Binding Temperature2}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock>
+                                                            Температура 2, <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
+                                                        </TextBlock>
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
+                                                <DataGridTextColumn Binding="{Binding VolumeFlowFiltr}">
+                                                    <DataGridTextColumn.Header>
+                                                        <TextBlock>
+                                                            Объемный расход фильтрата, м<Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">3</Run>/ч
+                                                        </TextBlock>
+                                                    </DataGridTextColumn.Header>
+                                                </DataGridTextColumn>
 
-                            </DataGrid>
-                            <Button Command="{Binding Calc}" Content="Расчет" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"/>
-
-                        </Grid>                        
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </TabItem.Content>
+                                </TabItem>
+                                <TabItem Header="2D график" Width="93">
+                                    <TabItem.Content>
+                                        <oxy:PlotView MinHeight="350" Model="{Binding MyModel}"></oxy:PlotView>
+                                    </TabItem.Content>
+                                </TabItem>
+                            </TabControl>
+                        </Grid>
                     </GroupBox>
-                    
+
                 </StackPanel>
             </Grid>
         </StackPanel>

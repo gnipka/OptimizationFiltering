@@ -15,6 +15,7 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="MathNet.Symbolics" Version="0.24.0" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
