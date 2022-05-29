@@ -8,6 +8,34 @@ using System.Linq;
 
 namespace OptimizationFiltering.Optimization_Methods
 {
+    public struct Point
+    {
+        public double X;
+        public double Y;
+    }
+
+    /// <summary>
+    /// Хранение значений комплекса для вывода на экран
+    /// </summary>
+    public struct Complex
+    {
+        /// <summary>
+        /// номер комплекса
+        /// </summary>
+        public int NumberComplex;
+
+        /// <summary>
+        /// точки в комплекса 
+        /// </summary>
+        public double PointX;
+        public double PointY;
+
+        /// <summary>
+        /// Значения точек
+        /// </summary>
+        public double Func;
+    }
+
     internal class ComplexMethodBox
     {
         public ComplexMethodBox(InputParameters inputParameters, Limitations limitations, SolutionParameters solutionParameters)
@@ -16,11 +44,8 @@ namespace OptimizationFiltering.Optimization_Methods
             _Limitations = limitations;
             _SolutionParameters = solutionParameters;
         }
-        struct Point
-        {
-            public double X;
-            public double Y;
-        }
+
+        public List<Complex> Complices;
 
         /// <summary>
         /// тип данных для хранения наилучшей и наихуйдшей вершины
@@ -75,6 +100,7 @@ namespace OptimizationFiltering.Optimization_Methods
             countComplexPoints = 0;
             countErrorPoints = 0;
             Random random = new Random();
+            Complices = new List<Complex>();
 
             // находим начальные точки
             for (int i = 0; i < countPoint; i++)
@@ -109,7 +135,7 @@ namespace OptimizationFiltering.Optimization_Methods
 
         private double Expr(Point point)
         {
-            return Math.Round(_InputParameters.Alpha * _InputParameters.FuelLiquid * Math.Pow(point.X * point.X + _InputParameters.Beta * point.Y - _InputParameters.Mu * _InputParameters.DifferenceMagnitude1, _InputParameters.CountPartitions) + _InputParameters.Gamma * Math.Pow(_InputParameters.Beta1 * point.X + point.Y * point.Y - _InputParameters.Mu1 * _InputParameters.DifferenceMagnitude2, _InputParameters.CountPartitions), 2);
+            return 24 * 200 * (_InputParameters.Alpha * _InputParameters.FuelLiquid * Math.Pow(point.X * point.X + _InputParameters.Beta * point.Y - _InputParameters.Mu * _InputParameters.DifferenceMagnitude1, _InputParameters.CountPartitions) + _InputParameters.Gamma * Math.Pow(_InputParameters.Beta1 * point.X + point.Y * point.Y - _InputParameters.Mu1 * _InputParameters.DifferenceMagnitude2, _InputParameters.CountPartitions));
         }
 
         public OutputParameters Calc()
@@ -125,6 +151,8 @@ namespace OptimizationFiltering.Optimization_Methods
             _ComplexPoints = new Point[countPoint];
             _ErrorPoints = new Point[countPoint];
             _ValuesFunc = new double[countPoint];
+            
+
             var outputParameters = new OutputParameters();
 
             bool flag = true; // false - если хотя бы одна вершина удовлетворяет условиям
@@ -172,8 +200,17 @@ namespace OptimizationFiltering.Optimization_Methods
                 _ValuesFunc[i] = Expr(_ComplexPoints[i]);
             }
 
+            int number = 0;
+
             while (true)
             {
+                for(int i = 0; i < _ComplexPoints.Length; i++)
+                {
+                    Complices.Add(new Complex { NumberComplex = number, PointX = _ComplexPoints[i].X, PointY = _ComplexPoints[i].Y, Func = _ValuesFunc[i] });
+                }
+
+                number++;
+
                 double[] sortValuesFunc = new double[_ValuesFunc.Length];
 
                 for (int i = 0; i < _ValuesFunc.Length; i++)
@@ -232,7 +269,7 @@ namespace OptimizationFiltering.Optimization_Methods
                 {
                     outputParameters.Temperature1Result = Math.Round(centerPoint.X, 2);
                     outputParameters.Temperature2Result = Math.Round(centerPoint.Y, 2);
-                    outputParameters.VolumeFlowFiltrResult = Expr(centerPoint);
+                    outputParameters.VolumeFlowFiltrResult = Math.Round(Expr(centerPoint), 2);
 
                     return outputParameters;
                 }

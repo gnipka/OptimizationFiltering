@@ -3,17 +3,37 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OptimizationFiltering" xmlns:viewmodels="clr-namespace:OptimizationFiltering.ViewModels"
+        xmlns:viewmodels="clr-namespace:OptimizationFiltering.ViewModels"
         xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:ChartDirector="clr-namespace:ChartDirector;assembly=ChartDirector.Net.Desktop.Controls" 
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Charts;assembly=Syncfusion.SfChart.WPF"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         Title="Программный комплекс для решения задачи отпимизации" Height="650" Width="1200">
+
     <Grid>
         <StackPanel>
-            <Menu Style="{DynamicResource MaterialDesignMenu}">
-                <MenuItem Header="Справка" FontSize="14" Height="28"/>
-            </Menu>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="7 5 0 5" Grid.Column="0">Метод оптимизации</TextBlock>
+                <ComboBox Margin="-110 0 0 5" MaxWidth="150" Grid.Column="0">
+                    <ComboBoxItem Content="Комплекс-метод Бокса" IsSelected="True"/>
+                </ComboBox>
+                <!--<Menu Grid.Column="0" Style="{DynamicResource MaterialDesignMenu}">
+                    <MenuItem Command="{Binding OpenStepsOptim}" Header="Этапы оптимизации" FontSize="14" Height="28"/>
+                    <MenuItem Header="Справка" FontSize="14" Height="28"/>
+                </Menu>-->
+
+                <TextBlock Margin="0 5 5 0" HorizontalAlignment="Right" Grid.Column="1" FontSize="14" Height="28" Text="Объем оперативной памяти"/>
+                <TextBox HorizontalAlignment="Left" Grid.Column="2" Text="{Binding MemoryParam}" Width="40" FontSize="14" Height="28"/>
+            </Grid>
+
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -23,7 +43,22 @@
                 <StackPanel Grid.Column="0">
 
                     <GroupBox Grid.Column="0" Header="Математическая модель" FontSize="14" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <Image Stretch="UniformToFill" Source="/Уравнение.jpg"/>
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Margin="7 5 0 5" Grid.Column="0">Задание</TextBlock>
+                                <ComboBox Margin="80 0 0 5">
+                                    <ComboBoxItem Content="Вариант №20" IsSelected="True"/>
+                                </ComboBox>
+
+
+                            </Grid>
+                            <Image Stretch="UniformToFill" Source="/Уравнение.jpg"/>
+                        </StackPanel>
                     </GroupBox>
 
                     <GroupBox FontSize="14" Grid.Column="0" Header="Параметры математической модели" Style="{DynamicResource MaterialDesignCardGroupBox}">
@@ -124,11 +159,11 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock FontSize="14" Grid.Column="0" Grid.Row="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
-                                Объемный расход фильтрата
+                                Себестоимость фильтрата
                             </TextBlock>
                             <TextBox Text="{Binding OutputParameter.VolumeFlowFiltrResult}" FontSize="14" Height="26" Grid.Column="1" Grid.Row="0"/>
                             <TextBlock FontSize="14" Grid.Column="2" Grid.Row="0" Margin="5 5 0 0">
-                                м<Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">3</Run>/ч
+                                у.е.
                             </TextBlock>
 
                             <TextBlock Grid.Column="0" Grid.Row="1" FontSize="14" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
@@ -151,7 +186,7 @@
                             <TabControl Style="{DynamicResource MaterialDesignNavigatilRailTabControl}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 5 5" MaxHeight="350" >
                                 <TabItem Header="Таблица" Width="93">
                                     <TabItem.Content>
-                                        <DataGrid ItemsSource="{Binding OutputParameter.OutputParametersArray}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                                        <DataGrid IsReadOnly="True" ItemsSource="{Binding OutputParameter.OutputParametersArray}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Temperature1}">
                                                     <DataGridTextColumn.Header>
@@ -170,7 +205,7 @@
                                                 <DataGridTextColumn Binding="{Binding VolumeFlowFiltr}">
                                                     <DataGridTextColumn.Header>
                                                         <TextBlock>
-                                                            Объемный расход фильтрата, м<Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">3</Run>/ч
+                                                            Себестоимость фильтрата, у.е.
                                                         </TextBlock>
                                                     </DataGridTextColumn.Header>
                                                 </DataGridTextColumn>
@@ -179,10 +214,37 @@
                                         </DataGrid>
                                     </TabItem.Content>
                                 </TabItem>
+
                                 <TabItem Header="2D график" Width="93">
                                     <TabItem.Content>
                                         <oxy:PlotView MinHeight="350" Model="{Binding MyModel}"></oxy:PlotView>
                                     </TabItem.Content>
+                                </TabItem>
+
+                                <TabItem Header="3D график" Width="93">
+                                    <syncfusion:SfSurfaceChart  Palette="LightCandy" WireframeStroke ="Black"  ItemsSource="{Binding DataValues}"  XBindingPath="Temperature1" YBindingPath="VolumeFlowFiltr" ZBindingPath="Temperature2"  EnableZooming="True" EnableRotation="True" Type="Surface" RowSize="{Binding Diff}" ColumnSize="{Binding Diff}" Header="Поверхность отклика целевой функции" FontSize="20">
+
+                                        <syncfusion:SfSurfaceChart.ColorBar>
+                                            <syncfusion:ChartColorBar ShowLabel="True" DockPosition="Right"/>
+                                        </syncfusion:SfSurfaceChart.ColorBar>
+
+                                        <syncfusion:SfSurfaceChart.XAxis>
+
+                                            <syncfusion:SurfaceAxis Header="T1, C"  SmallTicksPerInterval="1" />
+
+                                        </syncfusion:SfSurfaceChart.XAxis>
+
+                                        <syncfusion:SfSurfaceChart.YAxis>
+
+                                            <syncfusion:SurfaceAxis Header="Себестоимость, у.е." SmallTicksPerInterval="1"/>
+                                            <!--LabelFormat="0.0"-->
+                                        </syncfusion:SfSurfaceChart.YAxis>
+
+                                        <syncfusion:SfSurfaceChart.ZAxis >
+                                            <syncfusion:SurfaceAxis Header="T2, C" SmallTicksPerInterval="1"/>
+
+                                        </syncfusion:SfSurfaceChart.ZAxis>
+                                    </syncfusion:SfSurfaceChart>
                                 </TabItem>
                             </TabControl>
                         </Grid>

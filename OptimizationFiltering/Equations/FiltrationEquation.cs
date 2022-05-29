@@ -26,7 +26,7 @@ namespace OptimizationFiltering.Equations
                     outputParameters.OutputParametersArray[s] = new OutputParametersArray();
                     outputParameters.OutputParametersArray[s].Temperature1 = Math.Round(i, 2);
                     outputParameters.OutputParametersArray[s].Temperature2 = Math.Round(j, 2);
-                    outputParameters.OutputParametersArray[s].VolumeFlowFiltr = Math.Round(inputParameters.Alpha * inputParameters.FuelLiquid * Math.Pow(i * i + inputParameters.Beta * j - inputParameters.Mu * inputParameters.DifferenceMagnitude1, inputParameters.CountPartitions) + inputParameters.Gamma * Math.Pow(inputParameters.Beta1 * i + j * j - inputParameters.Mu1 * inputParameters.DifferenceMagnitude2, inputParameters.CountPartitions), 2);
+                    outputParameters.OutputParametersArray[s].VolumeFlowFiltr = Math.Round(24 * 200 * (inputParameters.Alpha * inputParameters.FuelLiquid * Math.Pow(i * i + inputParameters.Beta * j - inputParameters.Mu * inputParameters.DifferenceMagnitude1, inputParameters.CountPartitions) + inputParameters.Gamma * Math.Pow(inputParameters.Beta1 * i + j * j - inputParameters.Mu1 * inputParameters.DifferenceMagnitude2, inputParameters.CountPartitions)), 2);
 
                     s++;
                 }
