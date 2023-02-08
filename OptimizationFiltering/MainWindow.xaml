@@ -1,4 +1,4 @@
-﻿<Window x:Class="OptimizationFiltering.MainWindow"
+﻿<Window x:Name="Window" x:Class="OptimizationFiltering.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,248 +10,254 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Charts;assembly=Syncfusion.SfChart.WPF"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
-        Title="Программный комплекс для решения задачи отпимизации" Height="650" Width="1200">
-
+        Title="Программный комплекс для решения задачи отпимизации" Height="650" Width="1200"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="28"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="0.2*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Margin="7 5 0 5" Grid.Column="0">Метод оптимизации</TextBlock>
-                <ComboBox Margin="-110 0 0 5" MaxWidth="150" Grid.Column="0">
-                    <ComboBoxItem Content="Комплекс-метод Бокса" IsSelected="True"/>
-                </ComboBox>
-                <!--<Menu Grid.Column="0" Style="{DynamicResource MaterialDesignMenu}">
+        <Border BorderBrush="Gray" BorderThickness="1">
+            <Menu Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Style="{DynamicResource MaterialDesignMenu}">
+                <MenuItem Command="{Binding ShowAuth}" CommandParameter="{Binding ElementName=Window}" Header="Сменить пользователя" FontSize="14" Height="28"/>
+            </Menu>
+        </Border>
+        <Grid x:Name="Grid" Grid.Row="1">
+            <StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="0.2*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="7 5 0 5" Grid.Column="0">Метод оптимизации</TextBlock>
+                    <ComboBox SelectedItem="{Binding SelectedTask}" SelectedValuePath="Name" DisplayMemberPath="Name" ItemsSource="{Binding Tasks}" Margin="-110 0 0 5" Grid.Column="0" MaxWidth="150"/>
+                    <!--<Menu Grid.Column="0" Style="{DynamicResource MaterialDesignMenu}">
                     <MenuItem Command="{Binding OpenStepsOptim}" Header="Этапы оптимизации" FontSize="14" Height="28"/>
                     <MenuItem Header="Справка" FontSize="14" Height="28"/>
                 </Menu>-->
 
-                <TextBlock Margin="0 5 5 0" HorizontalAlignment="Right" Grid.Column="1" FontSize="14" Height="28" Text="Объем оперативной памяти"/>
-                <TextBox HorizontalAlignment="Left" Grid.Column="2" Text="{Binding MemoryParam}" Width="40" FontSize="14" Height="28"/>
-            </Grid>
+                    <TextBlock Margin="0 5 5 0" HorizontalAlignment="Right" Grid.Column="1" FontSize="14" Height="28" Text="Объем оперативной памяти"/>
+                    <TextBox HorizontalAlignment="Left" Grid.Column="2" Text="{Binding MemoryParam}" Width="40" FontSize="14" Height="28"/>
+                </Grid>
 
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.6*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
 
-                    <GroupBox Grid.Column="0" Header="Математическая модель" FontSize="14" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <StackPanel>
+                        <GroupBox Grid.Column="0" Header="Математическая модель" FontSize="14" Style="{DynamicResource MaterialDesignCardGroupBox}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Margin="7 5 0 5" Grid.Column="0">Задание</TextBlock>
+                                    <ComboBox SelectedItem="{Binding SelectedMethod}" SelectedValuePath="Name" DisplayMemberPath="Name" ItemsSource="{Binding Methods}" Margin="80 0 0 5" Grid.Column="0" MaxWidth="150"/>
+                                </Grid>
+                                <Image Stretch="UniformToFill" Source="/Уравнение.jpg"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox FontSize="14" Grid.Column="0" Header="Параметры математической модели" Style="{DynamicResource MaterialDesignCardGroupBox}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="200"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition MinWidth="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock FontSize="14" Grid.Column="0" Grid.Row="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                Количество фильтрационных <LineBreak/> перегородок
+                                </TextBlock>
+                                <TextBox Text="{Binding InputParameter.CountPartitions}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="0"/>
+                                <TextBlock FontSize="14" Grid.Column="2" Grid.Row="0" Text="Шт" Margin="5 10 0 0"/>
+                                <TextBlock FontSize="14" Grid.Column="0" Grid.Row="1" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                Величина перепада давлений <LineBreak/> на первой перегородке
+                                </TextBlock>
+                                <TextBox Text="{Binding InputParameter.DifferenceMagnitude1}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="1"/>
+                                <TextBlock FontSize="14" Grid.Column="2" Grid.Row="1" Text="КПа" Margin="5 10 0 0"/>
+
+                                <TextBlock FontSize="14" Grid.Column="0" Grid.Row="2" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                Величина перепада давлений <LineBreak/> на второй перегородке
+                                </TextBlock>
+                                <TextBox Text="{Binding InputParameter.DifferenceMagnitude2}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="2"/>
+                                <TextBlock Grid.Column="2" FontSize="14" Grid.Row="2" Text="КПа" Margin="5 10 0 0"/>
+
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox FontSize="14" Grid.Column="0" Header="Ограничения" Style="{DynamicResource MaterialDesignCardGroupBox}">
+                            <Grid Margin="60 0 60 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition MaxWidth="70"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBox Text="{Binding Limitation.LeftT1}" TextAlignment="Center" FontSize="16" Grid.Column="0" Grid.Row="0"/>
+                                <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="1" Grid.Row="0">
+                                &lt;   T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">1</Run>  &lt;
+                                </TextBlock>
+                                <TextBox Text="{Binding Limitation.RightT1}" TextAlignment="Center" FontSize="16" Grid.Column="2" Grid.Row="0"/>
+
+                                <TextBox Text="{Binding Limitation.LeftT2}" TextAlignment="Center" FontSize="16" Grid.Column="0" Grid.Row="1"/>
+                                <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="1" Grid.Row="1">
+                                &lt;   T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">2</Run>  &lt;
+                                </TextBlock>
+                                <TextBox Text="{Binding Limitation.RightT2}" TextAlignment="Center" FontSize="16" Grid.Column="2" Grid.Row="1"/>
+
+                                <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="0" Grid.Row="2">
+                                0.5T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">1</Run> + T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">2</Run> &lt;=
+                                </TextBlock>
+                                <TextBox Text="{Binding Limitation.RightT1T2}" TextAlignment="Center" FontSize="16" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2"/>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox FontSize="14" Grid.Column="0" Header="Параметры метода решения модели" Style="{DynamicResource MaterialDesignCardGroupBox}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="175"/>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Margin="7 5 0 5" Grid.Column="0">Задание</TextBlock>
-                                <ComboBox Margin="80 0 0 5">
-                                    <ComboBoxItem Content="Вариант №20" IsSelected="True"/>
-                                </ComboBox>
-
-
-                            </Grid>
-                            <Image Stretch="UniformToFill" Source="/Уравнение.jpg"/>
-                        </StackPanel>
-                    </GroupBox>
-
-                    <GroupBox FontSize="14" Grid.Column="0" Header="Параметры математической модели" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="200"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition MinWidth="40"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock FontSize="14" Grid.Column="0" Grid.Row="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
-                                Количество фильтрационных <LineBreak/> перегородок
-                            </TextBlock>
-                            <TextBox Text="{Binding InputParameter.CountPartitions}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="0"/>
-                            <TextBlock FontSize="14" Grid.Column="2" Grid.Row="0" Text="Шт" Margin="5 10 0 0"/>
-                            <TextBlock FontSize="14" Grid.Column="0" Grid.Row="1" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
-                                Величина перепада давлений <LineBreak/> на первой перегородке
-                            </TextBlock>
-                            <TextBox Text="{Binding InputParameter.DifferenceMagnitude1}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="1"/>
-                            <TextBlock FontSize="14" Grid.Column="2" Grid.Row="1" Text="КПа" Margin="5 10 0 0"/>
-
-                            <TextBlock FontSize="14" Grid.Column="0" Grid.Row="2" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
-                                Величина перепада давлений <LineBreak/> на второй перегородке
-                            </TextBlock>
-                            <TextBox Text="{Binding InputParameter.DifferenceMagnitude2}" FontSize="14" TextAlignment="Center" Height="26" Grid.Column="1" Grid.Row="2"/>
-                            <TextBlock Grid.Column="2" FontSize="14" Grid.Row="2" Text="КПа" Margin="5 10 0 0"/>
-
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox FontSize="14" Grid.Column="0" Header="Ограничения" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <Grid Margin="60 0 60 0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition MaxWidth="70"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <TextBox Text="{Binding Limitation.LeftT1}" TextAlignment="Center" FontSize="16" Grid.Column="0" Grid.Row="0"/>
-                            <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="1" Grid.Row="0">
-                                &lt;   T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">1</Run>  &lt;
-                            </TextBlock>
-                            <TextBox Text="{Binding Limitation.RightT1}" TextAlignment="Center" FontSize="16" Grid.Column="2" Grid.Row="0"/>
-
-                            <TextBox Text="{Binding Limitation.LeftT2}" TextAlignment="Center" FontSize="16" Grid.Column="0" Grid.Row="1"/>
-                            <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="1" Grid.Row="1">
-                                &lt;   T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">2</Run>  &lt;
-                            </TextBlock>
-                            <TextBox Text="{Binding Limitation.RightT2}" TextAlignment="Center" FontSize="16" Grid.Column="2" Grid.Row="1"/>
-
-                            <TextBlock Margin="0 5 0 0" FontSize="16" TextAlignment="Center" Grid.Column="0" Grid.Row="2">
-                                0.5T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">1</Run> + T<Run FontFamily="Palatino Linotype" FontSize="17" Typography.Variants="Subscript">2</Run> &lt;=
-                            </TextBlock>
-                            <TextBox Text="{Binding Limitation.RightT1T2}" TextAlignment="Center" FontSize="16" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2"/>
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox FontSize="14" Grid.Column="0" Header="Параметры метода решения модели" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="175"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock FontSize="14" Grid.ColumnSpan="1" Grid.Column="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                <TextBlock FontSize="14" Grid.ColumnSpan="1" Grid.Column="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
                                 Погрешность вычисления
-                            </TextBlock>
-                            <TextBox Text="{Binding SolutionParameter.CalcError}" FontSize="14" Grid.Column="1" TextAlignment="Center"  />
-                        </Grid>
-                    </GroupBox>
-                </StackPanel>
-                <StackPanel Grid.Column="1">
-                    <GroupBox FontSize="14" Grid.Column="1" Header="Выходные параметры" Style="{DynamicResource MaterialDesignCardGroupBox}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="250"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                                </TextBlock>
+                                <TextBox Text="{Binding SolutionParameter.CalcError}" FontSize="14" Grid.Column="1" TextAlignment="Center"  />
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <GroupBox FontSize="14" Grid.Column="1" Header="Выходные параметры" Style="{DynamicResource MaterialDesignCardGroupBox}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="250"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock FontSize="14" Grid.Column="0" Grid.Row="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                <TextBlock FontSize="14" Grid.Column="0" Grid.Row="0" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
                                 Себестоимость фильтрата
-                            </TextBlock>
-                            <TextBox Text="{Binding OutputParameter.VolumeFlowFiltrResult}" FontSize="14" Height="26" Grid.Column="1" Grid.Row="0"/>
-                            <TextBlock FontSize="14" Grid.Column="2" Grid.Row="0" Margin="5 5 0 0">
+                                </TextBlock>
+                                <TextBox Text="{Binding OutputParameter.VolumeFlowFiltrResult}" IsReadOnly="True" FontSize="14" Height="26" Grid.Column="1" Grid.Row="0"/>
+                                <TextBlock FontSize="14" Grid.Column="2" Grid.Row="0" Margin="5 5 0 0">
                                 у.е.
-                            </TextBlock>
+                                </TextBlock>
 
-                            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="14" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                <TextBlock Grid.Column="0" Grid.Row="1" FontSize="14" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
                                 Температура на первой перегородке
-                            </TextBlock>
-                            <TextBox Text="{Binding OutputParameter.Temperature1Result}" FontSize="14" Height="26" Grid.Column="1" Grid.Row="1"/>
-                            <TextBlock Grid.Column="2" Grid.Row="1" FontSize="14" Margin="5 5 0 0">
+                                </TextBlock>
+                                <TextBox Text="{Binding OutputParameter.Temperature1Result}" IsReadOnly="True" FontSize="14" Height="26" Grid.Column="1" Grid.Row="1"/>
+                                <TextBlock Grid.Column="2" Grid.Row="1" FontSize="14" Margin="5 5 0 0">
                                 <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
-                            </TextBlock>
+                                </TextBlock>
 
-                            <TextBlock FontSize="14" Grid.Column="0" Grid.Row="2" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
+                                <TextBlock FontSize="14" Grid.Column="0" Grid.Row="2" Style="{DynamicResource MaterialDesignCaptionTextBlock}">
                                 Температура на второй перегородке
-                            </TextBlock>
-                            <TextBox Text="{Binding OutputParameter.Temperature2Result}" FontSize="14" Height="26" Grid.Column="1" Grid.Row="2"/>
-                            <TextBlock FontSize="14" Grid.Column="2" Grid.Row="2" Margin="5 5 0 0">
+                                </TextBlock>
+                                <TextBox Text="{Binding OutputParameter.Temperature2Result}" IsReadOnly="True" FontSize="14" Height="26" Grid.Column="1" Grid.Row="2"/>
+                                <TextBlock FontSize="14" Grid.Column="2" Grid.Row="2" Margin="5 5 0 0">
                                 <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
-                            </TextBlock>
-                            <Button Command="{Binding Calc}" Margin="0 10 0 10" Content="Расчет" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"/>
+                                </TextBlock>
+                                <Button Command="{Binding Calc}" CommandParameter="{Binding ElementName=Grid}" Margin="0 10 0 10" Content="Расчет" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"/>
 
-                            <TabControl Style="{DynamicResource MaterialDesignNavigatilRailTabControl}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 5 5" MaxHeight="350" >
-                                <TabItem Header="Таблица" Width="93">
-                                    <TabItem.Content>
-                                        <DataGrid IsReadOnly="True" ItemsSource="{Binding OutputParameter.OutputParametersArray}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Binding="{Binding Temperature1}">
-                                                    <DataGridTextColumn.Header>
-                                                        <TextBlock>
+                                <TabControl Style="{DynamicResource MaterialDesignNavigatilRailTabControl}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Margin="0 0 5 5" MaxHeight="350" >
+                                    <TabItem Header="Таблица" Width="93">
+                                        <TabItem.Content>
+                                            <DataGrid IsReadOnly="True" ItemsSource="{Binding OutputParameter.OutputParametersArray}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Binding="{Binding Temperature1}">
+                                                        <DataGridTextColumn.Header>
+                                                            <TextBlock>
                                                             Температура 1, <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
-                                                        </TextBlock>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding Temperature2}">
-                                                    <DataGridTextColumn.Header>
-                                                        <TextBlock>
+                                                            </TextBlock>
+                                                        </DataGridTextColumn.Header>
+                                                    </DataGridTextColumn>
+                                                    <DataGridTextColumn Binding="{Binding Temperature2}">
+                                                        <DataGridTextColumn.Header>
+                                                            <TextBlock>
                                                             Температура 2, <Run FontFamily="Palatino Linotype" FontSize="14" Typography.Variants="Superscript">0</Run>C
-                                                        </TextBlock>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-                                                <DataGridTextColumn Binding="{Binding VolumeFlowFiltr}">
-                                                    <DataGridTextColumn.Header>
-                                                        <TextBlock>
+                                                            </TextBlock>
+                                                        </DataGridTextColumn.Header>
+                                                    </DataGridTextColumn>
+                                                    <DataGridTextColumn Binding="{Binding VolumeFlowFiltr}">
+                                                        <DataGridTextColumn.Header>
+                                                            <TextBlock>
                                                             Себестоимость фильтрата, у.е.
-                                                        </TextBlock>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
+                                                            </TextBlock>
+                                                        </DataGridTextColumn.Header>
+                                                    </DataGridTextColumn>
 
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </TabItem.Content>
-                                </TabItem>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </TabItem.Content>
+                                    </TabItem>
 
-                                <TabItem Header="2D график" Width="93">
-                                    <TabItem.Content>
-                                        <oxy:PlotView MinHeight="350" Model="{Binding MyModel}"></oxy:PlotView>
-                                    </TabItem.Content>
-                                </TabItem>
+                                    <TabItem Header="2D график" Width="93">
+                                        <TabItem.Content>
+                                            <oxy:PlotView MinHeight="350" Model="{Binding MyModel}"></oxy:PlotView>
+                                        </TabItem.Content>
+                                    </TabItem>
 
-                                <TabItem Header="3D график" Width="93">
-                                    <syncfusion:SfSurfaceChart  Palette="LightCandy" WireframeStroke ="Black"  ItemsSource="{Binding DataValues}"  XBindingPath="Temperature1" YBindingPath="VolumeFlowFiltr" ZBindingPath="Temperature2"  EnableZooming="True" EnableRotation="True" Type="Surface" RowSize="{Binding Diff}" ColumnSize="{Binding Diff}" Header="Поверхность отклика целевой функции" FontSize="20">
+                                    <TabItem Header="3D график" Width="93">
+                                        <syncfusion:SfSurfaceChart  Palette="LightCandy" WireframeStroke ="Black"  ItemsSource="{Binding DataValues}"  XBindingPath="Temperature1" YBindingPath="VolumeFlowFiltr" ZBindingPath="Temperature2"  EnableZooming="True" EnableRotation="True" Type="Surface" RowSize="{Binding Diff}" ColumnSize="{Binding Diff}" Header="Поверхность отклика целевой функции" FontSize="20">
 
-                                        <syncfusion:SfSurfaceChart.ColorBar>
-                                            <syncfusion:ChartColorBar ShowLabel="True" DockPosition="Right"/>
-                                        </syncfusion:SfSurfaceChart.ColorBar>
+                                            <syncfusion:SfSurfaceChart.ColorBar>
+                                                <syncfusion:ChartColorBar ShowLabel="True" DockPosition="Right"/>
+                                            </syncfusion:SfSurfaceChart.ColorBar>
 
-                                        <syncfusion:SfSurfaceChart.XAxis>
+                                            <syncfusion:SfSurfaceChart.XAxis>
 
-                                            <syncfusion:SurfaceAxis Header="T1, C"  SmallTicksPerInterval="1" />
+                                                <syncfusion:SurfaceAxis Header="T1, C"  SmallTicksPerInterval="1" />
 
-                                        </syncfusion:SfSurfaceChart.XAxis>
+                                            </syncfusion:SfSurfaceChart.XAxis>
 
-                                        <syncfusion:SfSurfaceChart.YAxis>
+                                            <syncfusion:SfSurfaceChart.YAxis>
 
-                                            <syncfusion:SurfaceAxis Header="Себестоимость, у.е." SmallTicksPerInterval="1"/>
-                                            <!--LabelFormat="0.0"-->
-                                        </syncfusion:SfSurfaceChart.YAxis>
+                                                <syncfusion:SurfaceAxis Header="Себестоимость, у.е." SmallTicksPerInterval="1"/>
+                                                <!--LabelFormat="0.0"-->
+                                            </syncfusion:SfSurfaceChart.YAxis>
 
-                                        <syncfusion:SfSurfaceChart.ZAxis >
-                                            <syncfusion:SurfaceAxis Header="T2, C" SmallTicksPerInterval="1"/>
+                                            <syncfusion:SfSurfaceChart.ZAxis >
+                                                <syncfusion:SurfaceAxis Header="T2, C" SmallTicksPerInterval="1"/>
 
-                                        </syncfusion:SfSurfaceChart.ZAxis>
-                                    </syncfusion:SfSurfaceChart>
-                                </TabItem>
-                            </TabControl>
-                        </Grid>
-                    </GroupBox>
+                                            </syncfusion:SfSurfaceChart.ZAxis>
+                                        </syncfusion:SfSurfaceChart>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </GroupBox>
 
-                </StackPanel>
-            </Grid>
-        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

@@ -1,0 +1,256 @@
+﻿<Window x:Name="Window" x:Class="OptimizationFiltering.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OptimizationFiltering"
+        mc:Ignorable="d"
+        Title="AdminWindow" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="28"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="Gray" BorderThickness="1">
+            <Menu Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Style="{DynamicResource MaterialDesignMenu}">
+                <MenuItem Command="{Binding ShowAuth}" CommandParameter="{Binding ElementName=Window}" Header="Сменить пользователя" FontSize="14" Height="28"/>
+            </Menu>
+        </Border>
+
+        <TabControl TabStripPlacement="Left" Grid.Row="1" Grid.Column="0" Style="{DynamicResource MaterialDesignNavigatilRailTabControl}">
+
+            <TabItem Width="140" Height="49">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center"  Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" FontSize="14">
+                        Пользователи
+                    </TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.8*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid IsReadOnly="True" SelectedItem="{Binding SelectedUser}" Grid.Column="0" ItemsSource= "{Binding Users}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Логин" Binding="{Binding Username}"/>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Пароль" Binding="{Binding Password}"/>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Роль" Binding="{Binding Role.Name}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewLogin}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Логин:" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewPass}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Пароль:" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox SelectedItem="{Binding NewRole}" SelectedValuePath="Name" DisplayMemberPath="Name" ItemsSource="{Binding Roles}" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Роль:" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Button Command="{Binding AddUser}" Content="Добавить" Margin="10 10 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding UpdateUser}" Content="Изменить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding RemoveUser}" Content="Удалить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Width="140" Height="49">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center"  Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" FontSize="14">
+                        Методы
+                    </TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid IsReadOnly="True" SelectedItem="{Binding SelectedMethod}" Grid.Column="0" ItemsSource= "{Binding Methods}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Наименование метода" Binding="{Binding Name}"/>
+                                <DataGridCheckBoxColumn Width="SizeToHeader" Header="Реализован" Binding="{Binding IsImplemented}"></DataGridCheckBoxColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewNameMethod}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Наименование метода" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Margin="0 0 10 0" Grid.Column="1" IsChecked="{Binding NewIsImplemented}"></CheckBox>                                
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Реализован" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Button Command="{Binding AddMethod}" Content="Добавить" Margin="10 10 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding UpdateMethod}" Content="Изменить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding RemoveMethod}" Content="Удалить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Width="140" Height="49">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center"  Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" FontSize="14">
+                        Задачи
+                    </TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid IsReadOnly="True" SelectedItem="{Binding SelectedTask}" Grid.Column="0" ItemsSource= "{Binding Tasks}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Наименование задачи" Binding="{Binding Name}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewNameTask}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Наименование задачи" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Button Command="{Binding AddTask}" Content="Добавить" Margin="10 10 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding UpdateTask}" Content="Изменить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding RemoveTask}" Content="Удалить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Width="140" Height="49">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center"  Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" FontSize="14">
+                        Параметры задачи
+                    </TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid IsReadOnly="True" SelectedItem="{Binding SelectedParameter}" Grid.Column="0" ItemsSource= "{Binding Parameters}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Наименование параметра" Binding="{Binding Name}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewNameParameter}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Наименование параметра" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Button Command="{Binding AddParameter}" Content="Добавить" Margin="10 10 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding UpdateParameter}" Content="Изменить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding RemoveParameter}" Content="Удалить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem Width="160" Height="49">
+                <TabItem.Header>
+                    <TextBlock TextAlignment="Center"  Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" FontSize="14">
+                        Значения параметров
+                    </TextBlock>
+                </TabItem.Header>
+
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.7*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid IsReadOnly="True" Grid.Column="0" SelectedItem="{Binding SelectedTaskParameter}" ItemsSource= "{Binding TaskParameters}" Style="{DynamicResource MaterialDesignDataGrid}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Задача" Binding="{Binding Task.Name}"/>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Параметр" Binding="{Binding Parameter.Name}"/>
+                                <DataGridTextColumn Width="SizeToHeader" Header="Значение" Binding="{Binding Value}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.7*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox SelectedItem="{Binding NewTask}" SelectedValuePath="Name" DisplayMemberPath="Name" ItemsSource="{Binding Tasks}" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Задача" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.7*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox SelectedItem="{Binding NewParameter}" SelectedValuePath="Name" DisplayMemberPath="Name" ItemsSource="{Binding Parameters}" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Параметр" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.7*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding NewValue}"  Grid.Row="0" Height="24" Margin="0 0 10 0" Grid.Column="1"/>
+                                <TextBlock Style="{DynamicResource MaterialDesignDataGridTextColumnStyle}" Text="Значение" Grid.Row="0"  Margin="10 10 0 0" Height="24" Grid.Column="0" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Button Command="{Binding AddTaskParameter}" Content="Добавить" Margin="10 10 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding UpdateTaskParameter}" Content="Изменить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+                            <Button Command="{Binding RemoveTaskParameter}" Content="Удалить" Margin="10 5 10 5" Style="{DynamicResource MaterialDesignFlatLightBgButton}"/>
+
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

@@ -12,5 +12,6 @@ namespace OptimizationFiltering.Parametres
         /// Погрешность вычислений
         /// </summary>
         public double CalcError { get; set; }
+        public double Step { get; set; }
     }
 }

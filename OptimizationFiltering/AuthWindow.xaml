@@ -1,0 +1,28 @@
+﻿<Window x:Class="OptimizationFiltering.AuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:col="clr-namespace:System.Collections;assembly=mscorlib" 
+        xmlns:local="clr-namespace:OptimizationFiltering"
+        mc:Ignorable="d"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Title="Авторизация" Height="300" Width="500"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1">
+            <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" Style="{DynamicResource MaterialDesignHeadline4TextBlock}">Авторизация</TextBlock>
+            <TextBox Margin="0 20 0 0" Text="{Binding Login}" BorderBrush="{Binding BrushesLogin}" materialDesign:HintAssist.Hint="Введите логин" Style="{DynamicResource MaterialDesignFloatingHintTextBox}" Foreground="Gray"></TextBox>
+            <PasswordBox x:Name="pass" BorderBrush="{Binding BrushesPass}" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Foreground="Gray"></PasswordBox>
+
+            <Button Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Margin="0 60 0 0" Command="{Binding OpenWindow}" CommandParameter="{Binding ElementName=pass}">Войти</Button>
+        </StackPanel>
+    </Grid>
+</Window>
