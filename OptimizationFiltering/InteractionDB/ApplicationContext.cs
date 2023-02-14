@@ -76,49 +76,49 @@ namespace OptimizationFiltering.InteractionDB
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 1,
-                Name = "N"
+                Name = "Количество перегородок"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 2,
-                Name = "p1"
+                Name = "Величина перепада давлений на первой перегородке"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 3,
-                Name = "p2"
+                Name = "Величина перепада давлений на второй перегородке"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 4,
-                Name = "LeftT1"
+                Name = "Погрешность вычисления"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 5,
-                Name = "RightT1"
+                Name = "Минимальная температура на первой перегородке"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 6,
-                Name = "LeftT2"
+                Name = "Максимальная температура на первой перегородке"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 7,
-                Name = "RightT2"
+                Name = "Минимальная температура на второй перегородке"
             });
 
             modelBuilder.Entity<Parameter>().HasData(new Parameter
             {
                 Id = 8,
-                Name = "RightT1T2"
+                Name = "Максимальная температура на второй перегородке"
             });
 
             modelBuilder.Entity<TaskParameter>().HasKey(x => new { x.ParameterId, x.TaskId });

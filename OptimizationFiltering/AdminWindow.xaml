@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OptimizationFiltering"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800"
+        Title="Программный комплекс для решения задачи отпимизации" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>

@@ -9,7 +9,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         xmlns:syncfusion="clr-namespace:Syncfusion.UI.Xaml.Charts;assembly=Syncfusion.SfChart.WPF"
-        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d" 
         Title="Программный комплекс для решения задачи отпимизации" Height="650" Width="1200"
         WindowStartupLocation="CenterScreen">
     <Grid>
@@ -21,6 +21,7 @@
         <Border BorderBrush="Gray" BorderThickness="1">
             <Menu Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Style="{DynamicResource MaterialDesignMenu}">
                 <MenuItem Command="{Binding ShowAuth}" CommandParameter="{Binding ElementName=Window}" Header="Сменить пользователя" FontSize="14" Height="28"/>
+                <MenuItem Command="{Binding Export}" CommandParameter="{Binding ElementName=Window}" Header="Экспорт" FontSize="14" Height="28"/>
             </Menu>
         </Border>
         <Grid x:Name="Grid" Grid.Row="1">
@@ -254,7 +255,6 @@
                                 </TabControl>
                             </Grid>
                         </GroupBox>
-
                     </StackPanel>
                 </Grid>
             </StackPanel>

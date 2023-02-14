@@ -1,4 +1,5 @@
-﻿using OptimizationFiltering.Equations;
+﻿using Microsoft.Office.Interop.Excel;
+using OptimizationFiltering.Equations;
 using OptimizationFiltering.InteractionDB;
 using OptimizationFiltering.Models;
 using OptimizationFiltering.Optimization_Methods;
@@ -9,24 +10,27 @@ using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using WPF_MVVM_Classes;
+using WinForms = System.Windows.Forms;
 
 namespace OptimizationFiltering.ViewModels
 {
     internal class MainViewModel : ViewModelBase
     {
-        private ApplicationContext _ApplicationContext;
+        private InteractionDB.ApplicationContext _ApplicationContext;
 
         public MainViewModel()
         {
             CalcMemory();
-            _ApplicationContext = new ApplicationContext();
+            _ApplicationContext = new InteractionDB.ApplicationContext();
             Methods = _ApplicationContext.Method.ToList();
             Tasks = _ApplicationContext.Task.ToList();
             if (Tasks is not null)
@@ -35,6 +39,7 @@ namespace OptimizationFiltering.ViewModels
                 SelectedMethod = Methods[0];
         }
 
+        #region Memory
         async void CalcMemory()
         {
             await System.Threading.Tasks.Task.Run(() =>
@@ -58,8 +63,9 @@ namespace OptimizationFiltering.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
 
-        #region [InputParameters]
+        #region InputParameters
 
         private InputParameters _InputParameter = new InputParameters { Alpha = 1, Beta = 1, Beta1 = 1, FuelLiquid = 1, Gamma = 1, Mu = 1, Mu1 = 1 };
         public InputParameters InputParameter
@@ -96,7 +102,7 @@ namespace OptimizationFiltering.ViewModels
 
         #endregion
 
-        #region [OutputParameters]
+        #region OutputParameters
 
         private OutputParameters? _OutputParameter;
         public OutputParameters OutputParameter
@@ -141,28 +147,28 @@ namespace OptimizationFiltering.ViewModels
                     var id = item.ParameterId;
                     switch (id)
                     {
-                        case 9:
+                        case 1:
                             InputParameter.CountPartitions = (int)item.Value;
                             break;
-                        case 12:
+                        case 2:
                             InputParameter.DifferenceMagnitude1 = item.Value;
                             break;
-                        case 13:
+                        case 3:
                             InputParameter.DifferenceMagnitude2 = item.Value;
                             break;
-                        case 14:
+                        case 4:
                             SolutionParameter.CalcError = item.Value;
                             break;
-                        case 15:
+                        case 5:
                             Limitation.LeftT1 = item.Value;
                             break;
-                        case 16:
+                        case 6:
                             Limitation.RightT1 = item.Value;
                             break;
-                        case 17:
+                        case 7:
                             Limitation.LeftT2 = item.Value;
                             break;
-                        case 18:
+                        case 8:
                             Limitation.RightT2 = item.Value;
                             break;
                     }
@@ -191,10 +197,11 @@ namespace OptimizationFiltering.ViewModels
                 OnPropertyChanged();
             }
         }
-        #endregion
 
         private ComplexMethodBox? _ComplexMethodBox = null;
+        #endregion
 
+        #region Plot
         /// <summary>
         /// Модель для взаимодействия с графиком
         /// </summary>
@@ -227,21 +234,20 @@ namespace OptimizationFiltering.ViewModels
             set { _Diff = value; OnPropertyChanged(); }
         }
 
-
-
         private List<OutputParametersArray> _DataValues;
         public List<OutputParametersArray> DataValues
         {
             get { return _DataValues; }
             set { _DataValues = value; OnPropertyChanged(); }
         }
+        #endregion
 
         public void ProcessElement(DependencyObject element, StringBuilder sb)
         {
 
-            if (element is TextBox)
+            if (element is System.Windows.Controls.TextBox)
             {
-                if (Validation.GetHasError(element))
+                if (System.Windows.Controls.Validation.GetHasError(element))
                 {
                     sb.Append("ошибка:\r\n");
                 }
@@ -252,99 +258,6 @@ namespace OptimizationFiltering.ViewModels
                 ProcessElement(VisualTreeHelper.GetChild(element, i), sb);
             }
         }
-
-        //private RelayCommand _Calc;
-        //public RelayCommand Calc
-        //{
-        //    get
-        //    {
-        //        return _Calc ??= new RelayCommand(x =>
-        //        {
-        //            StringBuilder sb = new StringBuilder();
-        //            ProcessElement((DependencyObject)x, sb);
-
-        //            string message = sb.ToString();
-        //            if (message == string.Empty)
-        //            {
-        //                OutputParameters parameters = new OutputParameters();
-
-        //                if (SelectedMethod.Name == "Метод Бокса")
-        //                {
-        //                    _ComplexMethodBox = new ComplexMethodBox(InputParameter, Limitation, SolutionParameter);
-        //                    parameters = _ComplexMethodBox.Calc();
-        //                    //parameters.OutputParametersArray = FiltrationEquation.CalcEqvation(InputParameter, Limitation, SolutionParameter);
-
-        //                    parameters.OutputParametersArray = FiltrationEquation.CalcEqvation(InputParameter, Limitation, SolutionParameter);
-
-        //                    _DataValues = parameters.OutputParametersArray.ToList();
-        //                }
-        //                else if (SelectedMethod.Name == "Метод сканирования")
-        //                {
-        //                    ScanningMethod method = new ScanningMethod();
-        //                    var points = new List<Point3D>();
-        //                    method.Calculate(out points, Limitation, SolutionParameter, InputParameter);
-
-        //                    var temp = new List<double>();
-
-        //                    foreach (var point in points)
-        //                    {
-        //                        temp.Add(point.Z);
-        //                    }
-        //                    parameters.Temperature1Result = points.Find(x => x.Z == temp.Min()).X;
-        //                    parameters.Temperature2Result = points.Find(x => x.Z == temp.Min()).Y;
-        //                    parameters.VolumeFlowFiltrResult = temp.Min();
-        //                    //parameters.OutputParametersArray = new OutputParametersArray[points.Count];
-        //                    //_DataValues = new List<OutputParametersArray>();
-
-        //                    //for(int i = 0; i < points.Count; i++)
-        //                    //{
-        //                    //    parameters.OutputParametersArray[i] = new OutputParametersArray { Temperature1 = points[i].X, Temperature2 = points[i].Y, VolumeFlowFiltr = points[i].Z };
-        //                    //    _DataValues.Add(new OutputParametersArray { Temperature1 = points[i].X, Temperature2 = points[i].Y, VolumeFlowFiltr = points[i].Z });
-        //                    //}
-
-        //                    parameters.OutputParametersArray = FiltrationEquation.CalcEqvation(InputParameter, Limitation, SolutionParameter);
-
-        //                    _DataValues = parameters.OutputParametersArray.ToList();
-        //                }
-        //                Diff = (int)Math.Sqrt(DataValues.Count);
-        //                _MyModel = new PlotModel { Title = "C = F(T1, T2)", TitleFontSize = 16 };
-
-        //                Func<double, double, double> peaks = (x, y) => 24 * 200 * (InputParameter.Alpha * InputParameter.FuelLiquid * Math.Pow(x * x + InputParameter.Beta * y - InputParameter.Mu * InputParameter.DifferenceMagnitude1, InputParameter.CountPartitions) + InputParameter.Gamma * Math.Pow(InputParameter.Beta1 * x + y * y - InputParameter.Mu1 * InputParameter.DifferenceMagnitude2, InputParameter.CountPartitions));
-
-        //                double x0 = Limitation.LeftT1;
-        //                double x1 = Limitation.RightT1;
-        //                double y0 = Limitation.LeftT2;
-        //                double y1 = Limitation.RightT2;
-
-        //                var xx = ArrayBuilder.CreateVector(x0, x1, 100);
-        //                var yy = ArrayBuilder.CreateVector(y0, y1, 100);
-        //                PeaksData = ArrayBuilder.Evaluate(peaks, xx, yy);
-
-        //                var cs = new ContourSeries
-        //                {
-        //                    Color = OxyColors.Black,
-        //                    LabelBackground = OxyColors.White,
-        //                    ColumnCoordinates = yy,
-        //                    RowCoordinates = xx,
-        //                    Data = PeaksData,
-        //                    TrackerFormatString = "T1 = {2:0.00}, T2 = {4:0.00}" + Environment.NewLine + "V = {6:0.00}"
-        //                };
-
-        //                _MyModel.Series.Add(cs);
-
-        //                _MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Температура на первой перегородке, С" });
-        //                _MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Температура на второй перегородке, С" });
-
-        //                MyModel = _MyModel;
-        //                DataValues = _DataValues;
-        //                OutputParameter = parameters;
-        //            }
-
-        //            else
-        //                MessageBox.Show("Проверьте корректность введенных значений", "Ошибка при валидации данных");
-        //        });
-        //    }
-        //}
 
         private RelayCommand _Calc;
         public RelayCommand Calc
@@ -416,7 +329,6 @@ namespace OptimizationFiltering.ViewModels
                         var xx = ArrayBuilder.CreateVector(x0, x1, 100);
                         var yy = ArrayBuilder.CreateVector(y0, y1, 100);
                         PeaksData = ArrayBuilder.Evaluate(peaks, xx, yy);
-
                         var cs = new ContourSeries
                         {
                             Color = OxyColors.Black,
@@ -436,7 +348,59 @@ namespace OptimizationFiltering.ViewModels
                         OutputParameter = parameters;
                     }
                     else
-                        MessageBox.Show("Проверьте корректность введенных значений", "Ошибка при валидации данных");
+                        System.Windows.MessageBox.Show("Проверьте корректность введенных значений", "Ошибка при валидации данных");
+                });
+            }
+        }
+
+        private static Microsoft.Office.Interop.Excel.Application? _Excel;
+        private static Workbook? _Workbook;
+        private static Worksheet? _Worksheet;
+
+        private RelayCommand _Export;
+        public RelayCommand Export
+        {
+            get
+            {
+                return _Export ??= new RelayCommand(x =>
+                {
+                    if (OutputParameter != null)
+                    {
+                        var dialog = new System.Windows.Forms.FolderBrowserDialog();
+                        var result = dialog.ShowDialog();
+                        if (!string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                        {
+                            var path = dialog.SelectedPath;
+
+                            ExportExcel.Export(SelectedMethod, SelectedTask, InputParameter, Limitation, OutputParameter);
+
+                            string pathFile = Path.Combine(path, $"Отчет №1. {DateTime.Today.ToShortDateString()}.xlsx");
+                            var file = new FileInfo(Path.Combine(path, pathFile));
+
+                            int num = 1;
+                            while (file.Exists)
+                            {
+                                pathFile = Path.Combine(path, $"Отчет №{num}. {DateTime.Today.ToShortDateString()}.xlsx");
+                                pathFile.Replace(',', ' ');
+                                file = new FileInfo(Path.Combine(pathFile));
+                                num++;
+                            };
+
+                            var resultShow = System.Windows.MessageBox.Show($"Открыть файл в формате Excel? Он также будет сохранен по пути {pathFile}", "Экспорт в Excel", MessageBoxButton.YesNo);
+
+                            switch (resultShow)
+                            {
+                                case MessageBoxResult.Yes:
+                                    ExportExcel.Save(pathFile);
+                                    break;
+                                case MessageBoxResult.No:
+                                    ExportExcel.SaveAndClose(pathFile);
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                        System.Windows.MessageBox.Show("Выполните расчет");
                 });
             }
         }
@@ -479,7 +443,7 @@ namespace OptimizationFiltering.ViewModels
                     _AuthWindow.Show();
 
 
-                    ((Window)x).Hide();
+                    ((System.Windows.Window)x).Hide();
                 });
             }
         }
